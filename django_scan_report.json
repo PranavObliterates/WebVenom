@@ -1,8 +1,8 @@
 {
-  "scan_date": "2026-03-19 19:12:05",
+  "scan_date": "2026-03-19 23:28:33",
   "app_name": "django.core.handlers.wsgi",
   "routes_scanned": 7,
-  "scan_duration_seconds": 1.216,
+  "scan_duration_seconds": 1.078,
   "summary": {
     "total_issues": 19,
     "critical": 10,
