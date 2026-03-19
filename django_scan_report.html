@@ -59,30 +59,33 @@
             <h1>🔒 Security Scan Report</h1>
             <p><strong>Application:</strong> django.core.handlers.wsgi</p>
             <div class="stats">
-                <div class="stat">📍 Routes: 5</div>
-                <div class="stat">🔍 Issues: 16</div>
-                <div class="stat">⏱️ Time: 1.082s</div>
-                <div class="stat">📅 2026-03-16 22:51</div>
+                <div class="stat">📍 Routes: 7</div>
+                <div class="stat">🔍 Issues: 19</div>
+                <div class="stat">⏱️ Time: 4.797s</div>
+                <div class="stat">📅 2026-03-19 16:13</div>
             </div>
         </div>
 
         <div class="summary-bar">
-            <span class="summary-badge" style="background:#dc3545;">
-                7 Critical
-            </span>
-            <span class="summary-badge" style="background:#fd7e14;">
+            <button id="btn-all" class="summary-badge active" style="background:#333;color:#fff;" onclick="filterSeverity('all')">
+                All
+            </button>
+            <button id="btn-critical" class="summary-badge" style="background:#dc3545;" onclick="filterSeverity('critical')">
+                10 Critical
+            </button>
+            <button id="btn-high" class="summary-badge" style="background:#fd7e14;" onclick="filterSeverity('high')">
                 3 High
-            </span>
-            <span class="summary-badge" style="background:#ffc107;color:#333;">
+            </button>
+            <button id="btn-medium" class="summary-badge" style="background:#ffc107;color:#333;" onclick="filterSeverity('medium')">
                 5 Medium
-            </span>
-            <span class="summary-badge" style="background:#17a2b8;">
+            </button>
+            <button id="btn-low" class="summary-badge" style="background:#17a2b8;" onclick="filterSeverity('low')">
                 1 Low
-            </span>
+            </button>
         </div>
 
         
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -116,7 +119,7 @@
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -151,7 +154,7 @@ return f&quot;&lt;h1&gt;{escape(term)}&lt;/h1&gt;&quot;</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -186,7 +189,7 @@ return f&quot;&lt;h1&gt;{escape(name)}&lt;/h1&gt;&quot;</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
+        <div class="finding medium" style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -221,7 +224,75 @@ api_key = os.environ.get(&quot;API_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://owasp.org/www-community/vulnerabilities/Use_of_hard-coded_password" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+                    border-radius:8px;padding:16px;margin:12px 0;
+                    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display:flex;align-items:center;margin-bottom:8px;">
+                <span style="background:#dc3545;color:#fff;padding:4px 12px;
+                             border-radius:4px;font-weight:bold;font-size:0.85em;">
+                    CRITICAL
+                </span>
+                <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
+                <span style="margin-left:auto;color:#888;">#5</span>
+            </div>
+            <h3 style="margin:8px 0 4px 0;color:#333;">SSTI</h3>
+            <p style="color:#666;margin:4px 0;">
+                📍 <strong>/ssti/</strong>
+                 (line 4)
+                → C:\Users\prana\Downloads\python_security_scanner_library_project\examples\vulnerable_django_app.py
+            </p>
+            <div style="background:#f8f9fa;padding:8px 12px;border-radius:4px;
+                        font-family:monospace;font-size:0.9em;margin:8px 0;">
+                template = Template(tmpl)
+            </div>
+            <p><strong>⚠️ Why:</strong> Variable appears to come from user input and is interpolated directly into a template string, enabling Server-Side Template Injection.</p>
+            <p><strong>✅ Fix:</strong> Use render_template() with a static template file instead of rendering strings dynamically. If you must use strings, ensure input is strictly validated or sandboxed.</p>
+            
+            <div style="margin-top:8px;">
+                <div style="background:#fff0f0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>Before:</strong> <code>render_template_string(f&#x27;Hello {user_input}&#x27;)</code>
+                </div>
+                <div style="background:#f0fff0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>After:</strong> <code>render_template(&#x27;hello.html&#x27;, name=user_input)</code>
+                </div>
+            </div>
+            <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Server_Side_Template_Injection_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
+        </div>
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+                    border-radius:8px;padding:16px;margin:12px 0;
+                    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display:flex;align-items:center;margin-bottom:8px;">
+                <span style="background:#dc3545;color:#fff;padding:4px 12px;
+                             border-radius:4px;font-weight:bold;font-size:0.85em;">
+                    CRITICAL
+                </span>
+                <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
+                <span style="margin-left:auto;color:#888;">#6</span>
+            </div>
+            <h3 style="margin:8px 0 4px 0;color:#333;">INSECURE_DESERIALIZATION</h3>
+            <p style="color:#666;margin:4px 0;">
+                📍 <strong>/pickle/</strong>
+                 (line 6)
+                → C:\Users\prana\Downloads\python_security_scanner_library_project\examples\vulnerable_django_app.py
+            </p>
+            <div style="background:#f8f9fa;padding:8px 12px;border-radius:4px;
+                        font-family:monospace;font-size:0.9em;margin:8px 0;">
+                obj = pickle.loads(base64.b64decode(data))
+            </div>
+            <p><strong>⚠️ Why:</strong> Usage of pickle.loads() detected. This function is inherently unsafe and can execute arbitrary code during deserialization.</p>
+            <p><strong>✅ Fix:</strong> Use safer serialization formats like JSON (json.loads()) instead of pickle for unstrusted data.</p>
+            
+            <div style="margin-top:8px;">
+                <div style="background:#fff0f0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>Before:</strong> <code>pickle.loads(user_data)</code>
+                </div>
+                <div style="background:#f0fff0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>After:</strong> <code>json.loads(user_data)</code>
+                </div>
+            </div>
+            <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
+        </div>
+        <div class="finding high" style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -230,7 +301,7 @@ api_key = os.environ.get(&quot;API_KEY&quot;)</code>
                     HIGH
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
-                <span style="margin-left:auto;color:#888;">#5</span>
+                <span style="margin-left:auto;color:#888;">#7</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">DEBUG_MODE</h3>
             <p style="color:#666;margin:4px 0;">
@@ -255,7 +326,7 @@ api_key = os.environ.get(&quot;API_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://docs.djangoproject.com/en/stable/ref/settings/#debug" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
+        <div class="finding high" style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -264,7 +335,7 @@ api_key = os.environ.get(&quot;API_KEY&quot;)</code>
                     HIGH
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
-                <span style="margin-left:auto;color:#888;">#6</span>
+                <span style="margin-left:auto;color:#888;">#8</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">HARDCODED_SECRET</h3>
             <p style="color:#666;margin:4px 0;">
@@ -290,7 +361,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://docs.djangoproject.com/en/stable/ref/settings/#secret-key" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
+        <div class="finding high" style="border:1px solid #e0e0e0;border-left:4px solid #fd7e14;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -299,7 +370,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
                     HIGH
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
-                <span style="margin-left:auto;color:#888;">#7</span>
+                <span style="margin-left:auto;color:#888;">#9</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">CSRF_MISSING</h3>
             <p style="color:#666;margin:4px 0;">
@@ -329,7 +400,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://docs.djangoproject.com/en/stable/ref/csrf/" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
+        <div class="finding medium" style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -338,7 +409,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
                     MEDIUM
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">SAST</span>
-                <span style="margin-left:auto;color:#888;">#8</span>
+                <span style="margin-left:auto;color:#888;">#10</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">MISSING_SECURITY_HEADER</h3>
             <p style="color:#666;margin:4px 0;">
@@ -367,7 +438,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://docs.djangoproject.com/en/stable/ref/middleware/#django.middleware.security.SecurityMiddleware" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -376,7 +447,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
                     CRITICAL
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#9</span>
+                <span style="margin-left:auto;color:#888;">#11</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">SQL_INJECTION</h3>
             <p style="color:#666;margin:4px 0;">
@@ -401,7 +472,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -410,7 +481,7 @@ SECRET_KEY = os.environ.get(&quot;DJANGO_SECRET_KEY&quot;)</code>
                     CRITICAL
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#10</span>
+                <span style="margin-left:auto;color:#888;">#12</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">XSS</h3>
             <p style="color:#666;margin:4px 0;">
@@ -436,7 +507,7 @@ HttpResponse(f&quot;...{escape(id)}...&quot;)</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -445,7 +516,41 @@ HttpResponse(f&quot;...{escape(id)}...&quot;)</code>
                     CRITICAL
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#11</span>
+                <span style="margin-left:auto;color:#888;">#13</span>
+            </div>
+            <h3 style="margin:8px 0 4px 0;color:#333;">INSECURE_DESERIALIZATION</h3>
+            <p style="color:#666;margin:4px 0;">
+                📍 <strong>/user/</strong>
+                
+                → (dynamic test)
+            </p>
+            <div style="background:#f8f9fa;padding:8px 12px;border-radius:4px;
+                        font-family:monospace;font-size:0.9em;margin:8px 0;">
+                GET /user/?id=&lt;Base64_Pickle&gt;
+            </div>
+            <p><strong>⚠️ Why:</strong> Sending a serialized payload as parameter &#x27;id&#x27; caused a 500 error, indicating the server might be insecurely deserializing data.</p>
+            <p><strong>✅ Fix:</strong> Do not use unsafe deserialization formats like pickle.</p>
+            
+            <div style="margin-top:8px;">
+                <div style="background:#fff0f0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>Before:</strong> <code>pickle.loads(data)</code>
+                </div>
+                <div style="background:#f0fff0;padding:8px;border-radius:4px;margin:4px 0;">
+                    <strong>After:</strong> <code>json.loads(data)</code>
+                </div>
+            </div>
+            <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Deserialization_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
+        </div>
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+                    border-radius:8px;padding:16px;margin:12px 0;
+                    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display:flex;align-items:center;margin-bottom:8px;">
+                <span style="background:#dc3545;color:#fff;padding:4px 12px;
+                             border-radius:4px;font-weight:bold;font-size:0.85em;">
+                    CRITICAL
+                </span>
+                <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
+                <span style="margin-left:auto;color:#888;">#14</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">XSS</h3>
             <p style="color:#666;margin:4px 0;">
@@ -471,7 +576,7 @@ HttpResponse(f&quot;...{escape(q)}...&quot;)</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
+        <div class="finding critical" style="border:1px solid #e0e0e0;border-left:4px solid #dc3545;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -480,7 +585,7 @@ HttpResponse(f&quot;...{escape(q)}...&quot;)</code>
                     CRITICAL
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#12</span>
+                <span style="margin-left:auto;color:#888;">#15</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">XSS</h3>
             <p style="color:#666;margin:4px 0;">
@@ -506,7 +611,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
             </div>
             <p>📖 <a href="https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html" target="_blank">OWASP Reference</a></p>
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
+        <div class="finding medium" style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -515,7 +620,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
                     MEDIUM
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#13</span>
+                <span style="margin-left:auto;color:#888;">#16</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">MISSING_SECURITY_HEADER</h3>
             <p style="color:#666;margin:4px 0;">
@@ -540,7 +645,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
             </div>
             
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #17a2b8;
+        <div class="finding low" style="border:1px solid #e0e0e0;border-left:4px solid #17a2b8;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -549,7 +654,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
                     LOW
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#14</span>
+                <span style="margin-left:auto;color:#888;">#17</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">MISSING_SECURITY_HEADER</h3>
             <p style="color:#666;margin:4px 0;">
@@ -574,7 +679,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
             </div>
             
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
+        <div class="finding medium" style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -583,7 +688,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
                     MEDIUM
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#15</span>
+                <span style="margin-left:auto;color:#888;">#18</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">MISSING_SECURITY_HEADER</h3>
             <p style="color:#666;margin:4px 0;">
@@ -608,7 +713,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
             </div>
             
         </div>
-        <div style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
+        <div class="finding medium" style="border:1px solid #e0e0e0;border-left:4px solid #ffc107;
                     border-radius:8px;padding:16px;margin:12px 0;
                     background:#fff;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
             <div style="display:flex;align-items:center;margin-bottom:8px;">
@@ -617,7 +722,7 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
                     MEDIUM
                 </span>
                 <span style="background:#28a745;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75em;margin-left:8px;">DAST</span>
-                <span style="margin-left:auto;color:#888;">#16</span>
+                <span style="margin-left:auto;color:#888;">#19</span>
             </div>
             <h3 style="margin:8px 0 4px 0;color:#333;">MISSING_SECURITY_HEADER</h3>
             <p style="color:#666;margin:4px 0;">
@@ -643,5 +748,20 @@ HttpResponse(f&quot;...{escape(name)}...&quot;)</code>
             
         </div>
     </div>
+    <script>
+        function filterSeverity(sev) {
+            document.querySelectorAll('.summary-badge').forEach(b => b.classList.remove('active'));
+            document.getElementById('btn-' + sev).classList.add('active');
+            
+            const findings = document.querySelectorAll('.finding');
+            findings.forEach(f => {
+                if (sev === 'all' || f.classList.contains(sev)) {
+                    f.style.display = 'block';
+                } else {
+                    f.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
