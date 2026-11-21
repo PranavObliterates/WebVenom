@@ -137,10 +137,6 @@ save_pdf_report(result, "security_report.pdf", prompt_for_key=True)
 
 ### 2. Command Line Interface (CLI)
 ```bash
-# Launch the interactive Web GUI & attack surface graph in your browser
-webvenom ui
-webvenom ui --port 8000 --target demos/vulnerable-flask/app.py
-
 # Scan a Flask application by file or directory (auto-detects app.py)
 webvenom scan demos/vulnerable-flask/app.py --html report.html --pdf report.pdf
 webvenom scan demos/vulnerable-flask/ --static-only
