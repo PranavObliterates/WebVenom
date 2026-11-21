@@ -204,8 +204,8 @@ def main(argv=None):
     if argv is None:
         argv = sys.argv[1:]
 
-    # Convenience: if user runs `pysecure app.py` instead of `pysecure scan app.py`
-    if argv and not argv[0].startswith("-") and argv[0] not in ("scan", "scan-url", "help"):
+    # Convenience: if user runs `webvenom app.py` instead of `webvenom scan app.py`
+    if argv and not argv[0].startswith("-") and argv[0] not in ("scan", "scan-url", "ui", "help"):
         argv = ["scan"] + argv
 
     parser = argparse.ArgumentParser(
@@ -328,11 +328,48 @@ def main(argv=None):
         help="Log detailed crawl requests and show tracebacks for failures.",
     )
 
+    # ui subcommand
+    ui_parser = subparsers.add_parser("ui", help="Launch the WebVenom live interactive web dashboard.")
+    ui_parser.add_argument(
+        "--port",
+        type=int,
+        default=8000,
+        help="Port to bind the local dashboard server (default: 8000)."
+    )
+    ui_parser.add_argument(
+        "--host",
+        default="127.0.0.1",
+        help="Host interface to bind the dashboard server (default: 127.0.0.1)."
+    )
+    ui_parser.add_argument(
+        "--no-browser",
+        action="store_true",
+        help="Do not automatically launch a browser tab."
+    )
+    ui_parser.add_argument(
+        "--target",
+        default="",
+        help="Optional initial target to preload in the dashboard."
+    )
+
     args = parser.parse_args(argv)
 
     if not args.command:
         parser.print_help()
         sys.exit(0 if len(argv) == 0 else 1)
+
+    if args.command == "ui":
+        from webvenom.ui.server import run_server
+        try:
+            run_server(
+                host=args.host,
+                port=args.port,
+                open_browser=not args.no_browser,
+                default_target=args.target,
+            )
+        except KeyboardInterrupt:
+            print("\n[*] WebVenom UI stopped.")
+        return 0
 
     logging.basicConfig(
         level=logging.WARNING,
