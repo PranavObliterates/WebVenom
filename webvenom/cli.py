@@ -258,9 +258,11 @@ def main(argv=None):
         help="Save report to PDF file with Gemini AI security insights."
     )
     scan_parser.add_argument(
+        "--github-report",
         "--sarif",
+        dest="sarif",
         metavar="FILE",
-        help="Save report to OASIS SARIF v2.1.0 format (for GitHub Code Scanning)."
+        help="Export GitHub Code Scanning alert report (OASIS SARIF format)."
     )
     scan_parser.add_argument(
         "--api-key",
@@ -313,7 +315,13 @@ def main(argv=None):
     url_parser.add_argument("--json", metavar="FILE", help="Save JSON report.")
     url_parser.add_argument("--html", metavar="FILE", help="Save HTML report.")
     url_parser.add_argument("--pdf", metavar="FILE", help="Save PDF report.")
-    url_parser.add_argument("--sarif", metavar="FILE", help="Save SARIF report.")
+    url_parser.add_argument(
+        "--github-report",
+        "--sarif",
+        dest="sarif",
+        metavar="FILE",
+        help="Export GitHub Code Scanning alert report (OASIS SARIF format)."
+    )
     url_parser.add_argument(
         "--debug",
         action="store_true",
@@ -399,7 +407,7 @@ def main(argv=None):
             save_html_report(result, args.html)
         if args.sarif:
             save_sarif_report(result, args.sarif)
-            print(f"   [*] SARIF report saved to: {args.sarif}")
+            print(f"   [*] GitHub Code Scanning report saved to: {args.sarif}")
         if args.pdf:
             save_pdf_report(
                 result,

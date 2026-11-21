@@ -149,8 +149,8 @@ webvenom scan demos/vulnerable-django/vuln_django/wsgi.py --pdf django_audit.pdf
 # Scan with session-only Gemini API key for remediation guidance
 webvenom scan app.py --pdf audit.pdf --api-key YOUR_GEMINI_KEY
 
-# Export SARIF for GitHub Code Scanning / CI
-webvenom scan app.py --sarif results.sarif
+# Export GitHub Code Scanning report for CI/CD
+webvenom scan app.py --github-report results.sarif
 
 # Static-only scan (fast mode without running test client)
 webvenom scan app.py --static-only --json report.json
