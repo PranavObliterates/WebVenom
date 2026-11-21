@@ -20,3 +20,8 @@ Scan the Django demo with WebVenom:
 ```bash
 webvenom scan demos/vulnerable-django/ --html django_report.html
 ```
+
+## How SQL Injection Works in WebVenom
+
+- **Scanner Detection (SAST)**: WebVenom detects SQL injection via static AST taint analysis (tracing request parameters directly into raw query strings). It analyzes the source code structure, meaning **it never requires a live database connection or pre-existing `.sqlite3` file to detect SQL vulnerabilities**.
+- **Live Interactive Demonstrations**: If you want to start the Flask demo locally in a browser (`python demos/vulnerable-flask/app.py`), it automatically initializes its SQLite schema and seed users (`admin`, `alice`, `bob`) on first run so you can interactively demonstrate SQL injection attacks (e.g. logging in via `' OR '1'='1`).

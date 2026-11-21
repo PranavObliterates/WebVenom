@@ -1,6 +1,8 @@
+import os
 import sqlite3
 
-conn = sqlite3.connect("vuln.db")
+db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vuln.db")
+conn = sqlite3.connect(db_path)
 cursor = conn.cursor()
 
 # Users table

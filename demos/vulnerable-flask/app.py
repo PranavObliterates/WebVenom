@@ -9,7 +9,35 @@ app.secret_key = "totally_not_secret"   # Weak secret key (another vuln)
 import os
 DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "vuln.db")
 
+def init_db():
+    if not os.path.exists(DB):
+        conn = sqlite3.connect(DB)
+        cursor = conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL,
+            password TEXT NOT NULL,
+            role TEXT DEFAULT 'user'
+        )
+        """)
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS comments (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            author TEXT NOT NULL,
+            body TEXT NOT NULL
+        )
+        """)
+        cursor.executemany("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", [
+            ("admin",  "supersecret123", "admin"),
+            ("alice",  "password1",      "user"),
+            ("bob",    "letmein",        "user"),
+        ])
+        conn.commit()
+        conn.close()
+
 def get_db():
+    init_db()
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     return conn
