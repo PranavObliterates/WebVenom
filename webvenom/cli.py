@@ -123,7 +123,7 @@ def load_app_from_path(app_target: str):
             if p and os.path.isdir(p) and p not in sys.path:
                 sys.path.insert(0, p)
 
-        spec = importlib.util.spec_from_file_location("pysecure_target_app", abs_path)
+        spec = importlib.util.spec_from_file_location("webvenom_target_app", abs_path)
         if spec is None or spec.loader is None:
             raise ImportError(f"Could not load module specification from '{file_part}'")
         mod = importlib.util.module_from_spec(spec)

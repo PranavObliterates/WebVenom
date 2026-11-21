@@ -85,9 +85,9 @@ def generate_sarif_report(result: ScanResult) -> Dict[str, Any]:
             {
                 "tool": {
                     "driver": {
-                        "name": "PySecure",
-                        "version": "0.2.0",
-                        "informationUri": "https://github.com/PranavObliterates/python-security-scanner",
+                        "name": "WebVenom",
+                        "version": "0.3.0",
+                        "informationUri": "https://github.com/PranavObliterates/WebVenom",
                         "rules": list(rules_dict.values()),
                     }
                 },

@@ -35,6 +35,3 @@ webvenom = "webvenom.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["security_scanner*", "webvenom*"]
-
-[tool.setuptools.package-data]
-"security_scanner.dynamic" = ["payloads/*.txt"]

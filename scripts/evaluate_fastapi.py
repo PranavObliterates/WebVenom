@@ -1,5 +1,5 @@
 """
-FastAPI Evaluation Framework for PySecure
+FastAPI Evaluation Framework for WebVenom
 
 Measures accuracy, precision, recall, F1 score and prints confusion matrices for FastAPI SAST, DAST, and Config.
 Run with: python -m scripts.evaluate_fastapi

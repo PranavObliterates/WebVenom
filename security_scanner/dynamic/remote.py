@@ -535,7 +535,7 @@ def _run_browser_crawl(
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        result.warnings.append("Browser scan requested but Playwright is not installed; install pysecure-scanner[browser].")
+        result.warnings.append("Browser scan requested but Playwright is not installed; install webvenom[browser].")
         return
     visited = set()
     with sync_playwright() as playwright:

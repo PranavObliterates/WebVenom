@@ -241,7 +241,7 @@ class TestPDFReport:
         assert sarif["version"] == "2.1.0"
         assert len(sarif["runs"]) == 1
         run = sarif["runs"][0]
-        assert run["tool"]["driver"]["name"] == "PySecure"
+        assert run["tool"]["driver"]["name"] == "WebVenom"
         assert len(run["results"]) == 3
         
         # Test saving to disk
