@@ -5,7 +5,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for reporting an issue in PySecure! Please fill out the details below.
+        Thank you for reporting an issue in WebVenom! Please fill out the details below.
   - type: dropdown
     id: issue-type
     attributes:
@@ -44,6 +44,6 @@ body:
     id: expected-behavior
     attributes:
       label: Expected Behavior
-      description: What should PySecure have detected or ignored?
+      description: What should WebVenom have detected or ignored?
     validations:
       required: true

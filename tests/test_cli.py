@@ -7,9 +7,9 @@ from webvenom.cli import main, load_app_from_path, load_cli_config
 
 
 def test_cli_load_config_from_pyproject(tmp_path):
-    """Test loading configuration from pyproject.toml [tool.pysecure]."""
+    """Test loading configuration from pyproject.toml [tool.pysecure] or [tool.webvenom]."""
     toml_content = b"""
-[tool.pysecure]
+[tool.webvenom]
 severity = "HIGH"
 fail_on = "CRITICAL"
 ignore = ["DEBUG_MODE", "WEAK_CRYPTO"]
@@ -24,13 +24,13 @@ ignore = ["DEBUG_MODE", "WEAK_CRYPTO"]
 
 
 def test_cli_load_config_from_rc(tmp_path):
-    """Test loading configuration from .pysecurerc JSON."""
+    """Test loading configuration from .webvenomrc / .pysecurerc JSON."""
     rc_content = {
         "severity": "MEDIUM",
         "fail_on": "HIGH",
         "ignore": ["CSRF_MISSING"]
     }
-    rc_file = tmp_path / ".pysecurerc"
+    rc_file = tmp_path / ".webvenomrc"
     rc_file.write_text(json.dumps(rc_content), encoding="utf-8")
 
     cfg = load_cli_config(str(tmp_path))

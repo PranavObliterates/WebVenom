@@ -4,15 +4,15 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![OWASP Top 10](https://img.shields.io/badge/OWASP-Top%2010%20(2021)-orange.svg)](https://owasp.org/Top10/)
 
-**PySecure** is an installable security scanner for Python web applications (**Flask, Django, and FastAPI**). It combines source analysis with bounded, private-target-only dynamic checks.
+**WebVenom** is an installable security scanner for Python web applications (**Flask, Django, and FastAPI**). It combines deep source code analysis (SAST) with bounded, private-target-only dynamic security checks (DAST).
 
-It generates human-friendly terminal reports, machine-readable JSON, visual HTML dashboards, and **executive PDF reports powered by Google Gemini AI**.
+It generates terminal summaries with ANSI syntax highlighting, machine-readable JSON, OASIS SARIF v2.1.0 output for GitHub Code Scanning, interactive HTML dashboards, and **executive PDF reports with AI-assisted code remediation guidance powered by Google Gemini**.
 
-> PySecure detects a broad set of OWASP Top 10 vulnerability classes across Python Flask, Django, and FastAPI applications.
+> WebVenom detects all 10 OWASP Top 10 (2021) vulnerability classes across Python Flask, Django, and FastAPI applications.
 
-The framework scanner provides SAST and passive in-process checks. The optional URL scanner crawls localhost/private-network targets with strict page, request, timeout, and rate limits. Its opt-in active probe is a harmless reflection canary, not an exploit test.
+The framework scanner provides AST-based taint analysis and passive in-process baseline checks. The optional URL crawler audits localhost/private-network targets with strict page, request, timeout, and rate bounds. Its opt-in active probe is a harmless reflection canary, not an exploit tool.
 
-**Contents:** [Install](#-installation) · [Scan apps](#-usage) · [Remote DAST](#remote-dast) · [Tests](#-running-tests--evaluation)
+**Contents:** [OWASP Coverage](#-owasp-top-10-coverage) · [Installation](#-installation) · [Architecture](#-architecture--how-it-works) · [Usage](#-usage) · [AI Remediation](#-optional-ai-remediation-guidance-zero-disk-persistence) · [Remote DAST](#remote-dast) · [Tests](#-running-tests--evaluation) · [Repository Layout](#-repository-layout)
 
 ---
 
@@ -20,22 +20,23 @@ The framework scanner provides SAST and passive in-process checks. The optional 
 
 | OWASP Category | Vulnerability Type | Detection Method |
 |---|---|---|
-| **A01: Broken Access Control** | Path Traversal / Arbitrary File Read | SAST |
-| **A01: Broken Access Control** | Open Redirects | SAST |
-| **A01: Broken Access Control** | Missing CSRF Protection | SAST (Config) |
-| **A02: Cryptographic Failures** | Hardcoded Secrets & Passwords | SAST (AST Pattern Engine) |
-| **A02: Cryptographic Failures** | Broken Hashing (MD4, MD5, SHA-1, SHA-0) | SAST |
-| **A02: Cryptographic Failures** | Insecure Cookie Attributes | DAST (Runtime Headers) |
-| **A03: Injection** | SQL Injection (SQLi) | SAST (source-to-sink analysis) |
-| **A03: Injection** | Cross-Site Scripting (Reflected XSS) | SAST |
-| **A03: Injection** | Command Injection (RCE) | SAST |
-| **A03: Injection** | Server-Side Template Injection (SSTI) | SAST |
-| **A05: Security Misconfiguration** | Debug Mode Enabled | SAST (Global Config) |
-| **A05: Security Misconfiguration** | CORS Wildcard with Credentials | SAST (Global Config) |
-| **A05: Security Misconfiguration** | Missing Security Headers (CSP, HSTS, X-Frame) | DAST |
-| **A07: Identification & Authentication Failures** | JWT signature, algorithm, and hardcoded-key misuse | SAST |
-| **A08: Software & Data Integrity** | Insecure Deserialization (pickle, PyYAML) | SAST |
-| **A10: Server-Side Request Forgery** | SSRF (Unchecked HTTP requests) | SAST |
+| **A01: Broken Access Control** | Path Traversal / Arbitrary File Read | SAST (Taint tracking to file system sinks) |
+| **A01: Broken Access Control** | Open Redirects | SAST (Source-to-redirect sinks) |
+| **A01: Broken Access Control** | Missing CSRF Protection | SAST (Configuration audit) |
+| **A02: Cryptographic Failures** | Hardcoded Secrets & API Keys | SAST (AST Pattern Engine & Entropy) |
+| **A02: Cryptographic Failures** | Broken Hashing (MD4, MD5, SHA-1, SHA-0) | SAST (Hash function call tracking) |
+| **A02: Cryptographic Failures** | Insecure Cookie Attributes (Missing Secure/HttpOnly/SameSite) | DAST (Runtime Headers) |
+| **A03: Injection** | SQL Injection (SQLi) | SAST (Source-to-sink AST analysis) |
+| **A03: Injection** | Cross-Site Scripting (Reflected XSS) | SAST (Unescaped output flows) |
+| **A03: Injection** | Command Injection (RCE) | SAST (Shell execution sinks) |
+| **A03: Injection** | Server-Side Template Injection (SSTI) | SAST (Template rendering sinks) |
+| **A05: Security Misconfiguration** | Debug Mode Enabled in Production | SAST (Global Configuration) |
+| **A05: Security Misconfiguration** | CORS Wildcard with Credentials | SAST (CORS Configuration) |
+| **A05: Security Misconfiguration** | Missing Security Headers (CSP, HSTS, X-Frame) | DAST (Response Headers) |
+| **A06: Vulnerable & Outdated Components** | Unpinned Dependencies & Known CVEs (OSV.dev) | SAST (Dependency Manifest Audit) |
+| **A07: Identification & Authentication Failures** | JWT signature, algorithm, and hardcoded-key misuse | SAST (Token handling analysis) |
+| **A08: Software & Data Integrity** | Insecure Deserialization (pickle, PyYAML) | SAST (Deserialization sinks) |
+| **A10: Server-Side Request Forgery** | SSRF (Unchecked HTTP requests) | SAST (Outbound request sinks) |
 
 ---
 
@@ -63,7 +64,7 @@ playwright install chromium
 
 ## 🏗️ Architecture & How It Works
 
-PySecure operates via a dual-engine analysis pipeline designed for speed and reduced false positives:
+WebVenom operates via a dual-engine analysis pipeline designed for speed and reduced false positives:
 
 ```
                       ┌────────────────────────────────────────┐
@@ -78,7 +79,7 @@ PySecure operates via a dual-engine analysis pipeline designed for speed and red
      │   AST Taint Engine    │                       │   In-Memory Prober    │
      ├───────────────────────┤                       ├───────────────────────┤
      │ • Route AST traversal │                       │ • Test client harness │
-     │ • Input source traces │                       │ • Benign baseline    │
+     │ • Input source traces │                       │ • Benign baseline     │
      │ • Taint propagation   │                       │ • Response reflection │
      │ • Config audit        │                       │ • Header/Cookie audit │
      └───────────┬───────────┘                       └───────────┬───────────┘
@@ -90,17 +91,17 @@ PySecure operates via a dual-engine analysis pipeline designed for speed and red
                              │ (Normalized Findings) │
                              └───────────┬───────────┘
                                          │
-         ┌───────────────────┬────────────┴───────┬───────────────────┬───────────────────┐
-         ▼                   ▼                    ▼                   ▼                   ▼
- ┌───────────────┐   ┌───────────────┐    ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
- │ Console ANSI  │   │  JSON Report  │    │ SARIF v2.1.0  │   │ HTML Dashboard│   │ PDF Executive │
- │ Output        │   │  (CI/CD)      │    │ (GitHub Code) │   │ (Visual UI)   │   │ + Gemini AI   │
- └───────────────┘   └───────────────┘    └───────────────┘   └───────────────┘   └───────────────┘
+         ┌───────────────────┬───────────┴───────────┬───────────────────┬───────────────────┐
+         ▼                   ▼                       ▼                   ▼                   ▼
+ ┌───────────────┐   ┌───────────────┐       ┌───────────────┐   ┌───────────────┐   ┌───────────────┐
+ │ Console ANSI  │   │  JSON Report  │       │ SARIF v2.1.0  │   │ HTML Dashboard│   │ PDF Executive │
+ │ Output        │   │  (CI/CD)      │       │ (GitHub Code) │   │ (Visual UI)   │   │ + Gemini AI   │
+ └───────────────┘   └───────────────┘       └───────────────┘   └───────────────┘   └───────────────┘
 ```
 
 1. **Static Analysis (SAST)**:
    - **AST Analysis Engine**: Parses Python source code into Abstract Syntax Trees using Python's native `ast` module.
-   - Reuses parsed syntax trees for identical route source and caches source lines, reducing repeated setup work across the analyzer rules.
+   - Reuses parsed syntax trees for identical route sources and caches source lines, reducing repeated setup work across analyzer rules.
    - **Deep Taint Propagation**: Identifies untrusted user input sources (Flask `request.args`, `request.form`, `request.json`, `request.values`, `request.data`, `request.headers`, `request.query_string`; Django `request.GET`, `request.POST`, `request.body`, `request.COOKIES`, `request.FILES`, `request.META`) and tracks data flow across variable assignments, method transformations (e.g. `.strip()`, `.lower()`), nested collections (dictionaries, lists, tuples), string formatting (`.format()`, `%` formatting, f-strings), and intermediate variables into sensitive sinks.
    - **Dangerous Sink Detection**: Catches raw SQL interpolation, `pickle.loads()` / `pickle.load()`, `os.system()` / `subprocess` shell calls, unvalidated `open()` path traversals, unvalidated HTTP calls (SSRF), unvalidated redirects, and weak cryptographic hashing (`md4`, `md5`, `sha1`, `sha`, `hmac`).
    - **Sanitization & Safety-Aware**: Accurately recognizes type conversions (`int()`, `float()`), HTML escaping (`markupsafe.escape()`, `html.escape()`), path sanitizers (`werkzeug.utils.secure_filename()`), safe URL generators (`url_for()`, `reverse()`), shell quoting (`shlex.quote()`), and safe subprocess invocations with `shell=False`.
@@ -108,7 +109,7 @@ PySecure operates via a dual-engine analysis pipeline designed for speed and red
    - **Configuration Auditing**: Inspects Flask and Django application configurations for insecure `DEBUG = True`, weak or hardcoded `SECRET_KEY`, missing `CSRF` protection, and missing security middleware.
 
 2. **Dynamic Analysis (DAST)**:
-   - **Passive Baseline Checks**: Uses framework test clients only for benign requests. It never generates or sends SQL, XSS, SSTI, deserialization, or command-injection payloads.
+   - **Passive Baseline Checks**: Uses framework test clients only for benign requests. It never generates or sends destructive or invasive payloads.
    - **Endpoint Risk Identification**: SAST maps untrusted input to dangerous sinks and reports the affected endpoint, source file, line, confidence, and remediation. DAST complements this with response-header, cookie, and baseline error checks.
    - **Transport & Cookie Audit**: Analyzes response headers (`Content-Security-Policy`, `Strict-Transport-Security`, `X-Frame-Options`, `X-Content-Type-Options`) and inspects session cookies for `Secure`, `HttpOnly`, and `SameSite` flags.
 
@@ -117,15 +118,15 @@ PySecure operates via a dual-engine analysis pipeline designed for speed and red
    - **JSON Export**: Machine-readable format conforming to automated vulnerability management platforms and CI/CD pipelines.
    - **SARIF v2.1.0 Export**: OASIS standard format consumed directly by GitHub Code Scanning, GitLab SAST, and VS Code.
    - **HTML Dashboard**: Self-contained visual report with interactive severity filtering and OWASP category mapping.
-   - **Executive PDF + Gemini AI**: Formatted PDF report with automatic XML-entity escaping for HTML/XSS code snippets, combining metrics with optional session-only Google Gemini AI executive analysis and prioritized developer remediation roadmaps.
+   - **Executive PDF + Gemini AI**: Formatted PDF report with automatic XML-entity escaping for code snippets, combining metrics with optional session-only Google Gemini AI executive analysis and prioritized developer remediation roadmaps.
 
 ---
 
 ## 💻 Usage
 
-### 1. In-App Python Code (2 Lines)
+### 1. In-App Python Code
 ```python
-from pysecure import scan_app, save_pdf_report
+from webvenom import scan_app, save_pdf_report
 
 # Scan your Flask, Django, or FastAPI app
 result = scan_app(app, dynamic=True)
@@ -180,18 +181,18 @@ webvenom scan-url http://127.0.0.1:5000/ --debug
 webvenom scan app.py --severity MEDIUM --ignore DEBUG_MODE,WEAK_CRYPTO
 ```
 
-### 3. Configuration Files (`pyproject.toml` or `.pysecurerc`)
-PySecure automatically discovers configuration from `pyproject.toml` or `.pysecurerc` in the project root:
+### 3. Configuration Files (`pyproject.toml` or `.webvenomrc`)
+WebVenom automatically discovers configuration from `pyproject.toml` or `.webvenomrc` in the project root:
 
 **`pyproject.toml`:**
 ```toml
-[tool.pysecure]
+[tool.webvenom]
 severity = "MEDIUM"
 fail_on = "HIGH"
 ignore = ["DEBUG_MODE"]
 ```
 
-**`.pysecurerc`:**
+**`.webvenomrc`:**
 ```json
 {
   "severity": "MEDIUM",
@@ -200,19 +201,20 @@ ignore = ["DEBUG_MODE"]
 }
 ```
 
+*(Legacy `.pysecurerc` and `[tool.pysecure]` configs remain fully supported for backward compatibility).*
+
 ---
 
 ## 🤖 Optional AI Remediation Guidance (Zero Disk Persistence)
 
-PySecure can use Google's Gemini API to translate technical findings into endpoint-specific, prioritized developer remediation guidance:
+WebVenom can utilize Google's Gemini API to provide deep, grounded remediation guidance tailored to each finding:
+- **Per-Finding Code Analysis**: The scanner provides concrete, context-aware remediation code diffs showing exactly how to fix the issue in your codebase.
 - **Session-Only Security**: You enter the Gemini API key into the terminal when prompted. It remains **strictly in volatile process memory** and is **never written to disk, config files, or git**.
 - When the terminal or process terminates, the key is completely purged.
-- If you skip the prompt or do not have an API key, PySecure automatically falls back to its built-in rule engine so PDF generation always succeeds.
-- The AI prompt explicitly forbids exploit payloads and attack instructions. The scanner remains useful without an API key because every finding includes a deterministic fix recommendation.
+- If you skip the prompt or do not have an API key, WebVenom automatically falls back to its deterministic rule engine so PDF generation always succeeds.
+- The AI prompt explicitly forbids exploit payloads and attack instructions. The scanner remains completely functional without an API key because every finding includes built-in fix recommendations.
 
-PySecure does not self-modify or silently update itself. Automatic updates would create a supply-chain and reproducibility risk. Keep the scanner current through reviewed package releases and pin versions in CI; the scanner can still operate offline with its built-in rules.
-
-Dependency auditing is deterministic and offline by default. It reports unpinned requirements; known-vulnerability database lookups should be added only as an explicit network-enabled CI step. Active DAST is opt-in and uses harmless reflection canaries only. Never point it at systems without authorization.
+---
 
 ## Remote DAST
 
@@ -231,8 +233,8 @@ Authentication is supplied as a JSON workflow file. Put secret values in environ
     "path": "/login",
     "csrf": {"path": "/login", "field": "csrf_token"},
     "form": {
-      "username": {"env": "PYSECURE_TEST_USERNAME"},
-      "password": {"env": "PYSECURE_TEST_PASSWORD"}
+      "username": {"env": "WEBVENOM_TEST_USERNAME"},
+      "password": {"env": "WEBVENOM_TEST_PASSWORD"}
     }
   },
   "authorization": [
@@ -245,7 +247,7 @@ Authentication is supplied as a JSON workflow file. Put secret values in environ
 }
 ```
 
-The optional `csrf` entry fetches a page first and reads the named hidden input field into the login form. Set `PYSECURE_TEST_USERNAME` and `PYSECURE_TEST_PASSWORD` in the shell or CI secret store, then run:
+The optional `csrf` entry fetches a page first and reads the named hidden input field into the login form. Set credentials in the shell or CI secret store, then run:
 
 ```bash
 webvenom scan-url http://127.0.0.1:5000/ --auth-config dast-auth.json
@@ -275,21 +277,23 @@ python -m scripts.evaluate_fastapi
 
 ## 📁 Repository Layout
 
-- `pysecure/` — public CLI package.
-- `security_scanner/` — scanner engine, analyzers, DAST checks, models, and report generators.
-- `tests/` — unit and integration tests.
-- `examples/` — small safe and vulnerable samples plus analyzer fixtures.
-- `demos/vulnerable-flask/` and `demos/vulnerable-django/` — complete intentionally vulnerable apps; run only locally or in an isolated environment.
-- `scripts/` — optional framework accuracy evaluation modules.
+- `webvenom/` — Public CLI package entrypoint (`cli.py`), versioning, and unified library exports.
+- `security_scanner/` — Core scanning engine, OWASP A01–A10 AST analyzers, DAST prober, data models, and multi-format report generators.
+- `tests/` — Automated test suite covering SAST analyzers, DAST probers, CLI options, and reporting formats.
+- `examples/` — Minimal safe and intentionally vulnerable application patterns for testing and reference.
+- `demos/vulnerable-flask/` and `demos/vulnerable-django/` — Complete intentionally vulnerable reference applications (run only locally in an isolated sandbox).
+- `scripts/` — Accuracy and benchmark evaluation modules across Flask, Django, and FastAPI.
 
-Generated reports, databases, build artifacts, and local secrets are ignored and should not be committed. This README is the canonical project documentation.
+Generated reports, databases, build artifacts, and local secrets are ignored and should not be committed.
+
+---
 
 ### GitHub Actions (including scheduled scans)
 
-PySecure runs one bounded scan per command. Use your CI scheduler for recurring scans; this example runs on pushes and every Monday:
+WebVenom runs one bounded scan per command. Use your CI scheduler for recurring scans; this example runs on pushes and every Monday:
 
 ```yaml
-name: PySecure
+name: WebVenom Security Scan
 on:
   push:
     branches: [main]
@@ -306,26 +310,24 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install PySecure
+      - name: Install WebVenom
         run: pip install .
       - name: Scan source
-        run: webvenom scan . --static-only --dependencies --sarif pysecure.sarif --fail-on HIGH
+        run: webvenom scan . --static-only --dependencies --sarif webvenom.sarif --fail-on HIGH
       - name: Upload SARIF
         if: always()
         uses: github/codeql-action/upload-sarif@v3
         with:
-          sarif_file: pysecure.sarif
+          sarif_file: webvenom.sarif
 ```
 
 ---
 
 ## 📦 Project Source
 
-This project lives on GitHub and is not published to PyPI.
+This project lives on GitHub and is distributed directly from source.
 Install directly from the repository:
 
 ```bash
 pip install git+https://github.com/PranavObliterates/WebVenom.git
 ```
-
-

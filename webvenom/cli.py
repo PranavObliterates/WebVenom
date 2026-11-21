@@ -30,22 +30,23 @@ SEVERITY_ORDER = {
 
 
 def load_cli_config(target: str = "") -> dict:
-    """Load configuration from .pysecurerc or pyproject.toml."""
+    """Load configuration from .webvenomrc, .pysecurerc, or pyproject.toml."""
     target_dir = target if os.path.isdir(target) else os.path.dirname(os.path.abspath(target)) if os.path.isfile(target) else "."
     search_dirs = [os.getcwd()]
     if target_dir and target_dir not in search_dirs:
         search_dirs.append(target_dir)
 
     for d in search_dirs:
-        rc_path = os.path.join(d, ".pysecurerc")
-        if os.path.isfile(rc_path):
-            try:
-                import json
-                with open(rc_path, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            except Exception:
-                logger.debug("Could not read PySecure config at %s", rc_path, exc_info=True)
-                pass
+        for rc_name in [".webvenomrc", ".pysecurerc"]:
+            rc_path = os.path.join(d, rc_name)
+            if os.path.isfile(rc_path):
+                try:
+                    import json
+                    with open(rc_path, "r", encoding="utf-8") as f:
+                        return json.load(f)
+                except Exception:
+                    logger.debug("Could not read config at %s", rc_path, exc_info=True)
+                    pass
 
         pyproj_path = os.path.join(d, "pyproject.toml")
         if os.path.isfile(pyproj_path):
@@ -56,11 +57,11 @@ def load_cli_config(target: str = "") -> dict:
                     import tomli as tomllib
                 with open(pyproj_path, "rb") as f:
                     data = tomllib.load(f)
-                    cfg = data.get("tool", {}).get("pysecure")
+                    cfg = data.get("tool", {}).get("webvenom") or data.get("tool", {}).get("pysecure")
                     if cfg and isinstance(cfg, dict):
                         return cfg
             except Exception:
-                logger.debug("Could not read PySecure settings from %s", pyproj_path, exc_info=True)
+                logger.debug("Could not read settings from %s", pyproj_path, exc_info=True)
                 pass
     return {}
 
@@ -208,8 +209,8 @@ def main(argv=None):
         argv = ["scan"] + argv
 
     parser = argparse.ArgumentParser(
-        prog="pysecure",
-        description="PySecure: Embedded SAST + DAST Security Scanner for Python Web Applications.",
+        prog="webvenom",
+        description="WebVenom (PySecure): Embedded SAST + DAST Security Scanner for Python Web Applications.",
     )
     parser.add_argument("--version", action="version", version=f"webvenom {__version__}")
 
@@ -348,7 +349,7 @@ def main(argv=None):
             sys.exit(1)
 
         mode = "DAST + active canaries" if args.active_dast else ("DAST" if not args.static_only else "Static Only")
-        print(f"[*] Starting PySecure scan (SAST + {mode})...")
+        print(f"[*] Starting WebVenom scan (SAST + {mode})...")
         try:
             result = scan_app(
                 app,
